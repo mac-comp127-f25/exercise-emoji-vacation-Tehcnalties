@@ -52,6 +52,9 @@ public class EmojiVacation {
         List<GraphicsGroup> family = createFamily(2, 3);
         positionFamily(family, 60, 550, 20);
         // TODO: [Instructions step 4] Add each emoji in the list to the canvas
+        for(GraphicsGroup member : family) {
+            canvas.add(member);
+        }
     }
 
     // –––––– Emoji family –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -97,6 +100,10 @@ public class EmojiVacation {
         //
         // The bottom of each emoji should be baselineY. But setPosition() sets the _top_! How do you set the bottom to
         // a given position? (Hint: you can ask any graphics object for its height.)
+        for(GraphicsGroup member : family) {
+            member.setPosition(leftX, baselineY - member.getHeight());
+            leftX = leftX + member.getWidth() + spacing;
+        }
     }
 
     // –––––– Scenery ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -371,3 +378,4 @@ public class EmojiVacation {
         return Math.min(255, Math.max(0, c + randomInt(-amount, amount)));
     }
 }
+
