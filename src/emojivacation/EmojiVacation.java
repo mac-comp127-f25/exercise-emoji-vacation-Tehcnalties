@@ -34,15 +34,16 @@ public class EmojiVacation {
 
     private static void doSlideShow(CanvasWindow canvas) {
         while(true) {
-            canvas.setBackground(NO_SLIDE_COLOR);
-            //canvas.pause(2000);
             generateVacationPhoto(canvas);
             canvas.draw();
 
             canvas.pause(3000);
 
             canvas.removeAll();
-            //canvas.pause(2000);
+
+            canvas.setBackground(NO_SLIDE_COLOR);
+            canvas.draw();
+            canvas.pause(500);
         }
     }
 
