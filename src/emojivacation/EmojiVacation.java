@@ -4,6 +4,7 @@ import edu.macalester.graphics.*;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
@@ -81,6 +82,8 @@ public class EmojiVacation {
         for(int i = 0; i < childCount; i++) {
             familyList.add(createRandomEmoji(childSize));
         }
+
+        Collections.shuffle(familyList);
 
         return familyList;
     }
