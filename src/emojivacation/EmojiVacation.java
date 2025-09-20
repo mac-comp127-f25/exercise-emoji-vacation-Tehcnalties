@@ -9,18 +9,24 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 
+import java.time.*;
+
 @SuppressWarnings("SameParameterValue")
 public class EmojiVacation {
     private static final Color
         SUN_YELLOW = new Color(0xffff78),
         SUN_BORDER_YELLOW = new Color(0xdcdc3c),
         SKY_BLUE = new Color(0xccd9ff),
+        NIGHT_SKY = new Color(0x513f65),
         CLOUD_COLOR = new Color(0x80ffffff, true),
+        CLOUD_COLOR_DARK = new Color(0x80a9a9a9, true),
         TREE_TRUNK_COLOR = new Color(0x553511),
         TREE_LEAVES_COLOR = new Color(0x17af13),
         GRASS_COLOR = new Color(0xbcda9f),
         MOUNTAIN_COLOR = new Color(0x769afe),
-        NO_SLIDE_COLOR = new Color(0x22211a);
+        NO_SLIDE_COLOR = new Color(0x22211a),
+        MOON_COLOR = new Color(0xdcdcdc),
+        MOON_BORDER = new Color(0xc9c9c9);
 
     private static final int
         SCENE_WIDTH = 800,
@@ -49,11 +55,27 @@ public class EmojiVacation {
     }
 
     private static void generateVacationPhoto(CanvasWindow canvas) {
-        canvas.setBackground(randomColorVariation(SKY_BLUE, 8));
+        LocalTime time = LocalTime.now();
+        int currentHour = time.getHour();
+        Boolean isDay;
+        if(currentHour < 7 || currentHour > 20) isDay = false;
+        else isDay = true;
 
-        addSun(canvas);
+        if(isDay) {
+            canvas.setBackground(randomColorVariation(SKY_BLUE, 8));
 
-        addCloudRows(canvas);
+            addSun(canvas);
+
+            addCloudRows(canvas);
+        }
+        if(!isDay) {
+            canvas.setBackground(randomColorVariation(NIGHT_SKY, 8));
+
+            addMoon(canvas);
+
+            addDarkCloudRows(canvas);
+        }
+
 
         if(percentChance(50)) addMountains(canvas, 400, randomInt(100, 110), randomInt(5, 8));
 
@@ -248,6 +270,12 @@ public class EmojiVacation {
         canvas.add(sun);
     }
 
+    private static void addMoon(CanvasWindow canvas) {
+        GraphicsGroup moon = createMoon(randomDouble(30, 50));
+        moon.setCenter(randomDouble(100, 700), randomDouble(60, 200));
+        canvas.add(moon);
+    }
+
     /**
      * Puts the sun in your sky.
      *
@@ -268,6 +296,19 @@ public class EmojiVacation {
 
         addSunRays(sun, radius * 1.2, radius * 1.4, rayCount);
         return sun;
+    }
+
+    private static GraphicsGroup createMoon(double radius) {
+        GraphicsGroup moon = new GraphicsGroup();
+
+        Ellipse moonCenter = new Ellipse(-radius, -radius, radius * 2, radius * 2);
+        moonCenter.setFillColor(MOON_COLOR);
+        moonCenter.setFilled(true);
+        moonCenter.setStrokeColor(MOON_BORDER);
+        moonCenter.setStrokeWidth(3);
+        moon.add(moonCenter);
+
+        return moon;
     }
 
     /**
@@ -304,6 +345,20 @@ public class EmojiVacation {
                 true,
                 cloudPuffSize,
                 CLOUD_COLOR);
+            cloud.setPosition(randomDouble(0, 800), y);
+            canvas.add(cloud);
+        }
+    }
+
+    private static void addDarkCloudRows(CanvasWindow canvas) {
+        double cloudRowSize = randomDouble(20, 120);
+        double cloudPuffSize = randomDouble(20, 40);
+        for (double y = 0; y < SCENE_HEIGHT; y += cloudRowSize) {
+            GraphicsGroup cloud = createPuff(
+                randomDouble(100, 200), cloudRowSize * 0.6,
+                true,
+                cloudPuffSize,
+                CLOUD_COLOR_DARK);
             cloud.setPosition(randomDouble(0, 800), y);
             canvas.add(cloud);
         }
